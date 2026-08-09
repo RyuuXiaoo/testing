@@ -5,6 +5,7 @@ const {connectDB}=require("./db");
 const {User,Blacklist}=require("./models");
 const {guardIP,ipOf}=require("./middleware");
 const settings=require("./settings");
+const { endpoints, categories } = require("./endpoints-data");
 const app=express();
 app.set("trust proxy",true);app.use(cors());app.use(express.json({limit:"1mb"}));app.use(express.urlencoded({extended:false}));
 let dbReady;
@@ -53,7 +54,8 @@ app.use("/admin",require("./admin"));
 app.use("/internal",require("./cron"));
 
 app.get("/api/health",(req,res)=>res.json({status:true,name:"RyuuXiao Portal",database:"connected"}));
-app.get("/api/docs",(req,res)=>res.json({status:true,apis:["ai","am","stalk"],freeApiKey:settings.defaults.freeApiKey}));
+app.get("/api/docs",(req,res)=>res.json({status:true,apis:["ai","am","stalk"],freeApiKey:settings.defaults.freeApiKey,endpointCount:endpoints.length,categories}));
+app.get("/api/endpoints",(req,res)=>res.json({status:true,freeApiKey:settings.defaults.freeApiKey,categories,endpoints}));
 
 // Load ONLY AI, AM and STALK modules.
 for(const folder of ["ai","am","stalk"]){

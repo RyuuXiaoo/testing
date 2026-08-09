@@ -4,6 +4,8 @@ Portal akun + API untuk deployment Node.js/Vercel.
 
 ## Fitur
 - Login / register dengan MongoDB
+- Setelah login langsung masuk ke halaman endpoint, bukan detail profile
+- Endpoint dashboard: daftar kategori dan detail API (AI / AM / STALK / AUTH / ADMIN / SYSTEM)
 - Profile: role, email, daily limit, status & tanggal berakhir premium
 - Tukar username
 - Foto profile via URL
