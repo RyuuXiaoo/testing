@@ -1,27 +1,16 @@
 {
   "name": "ryuuxiao-portal",
   "version": "2.0.0",
-  "description": "Login, register, profile, admin, MongoDB, WhatsApp reset, Telegram notification, AI/AM/Stalk API portal",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-  },
-  "dependencies": {
-    "axios": "^1.6.2",
-    "body-parser": "^1.20.2",
-    "chalk": "^4.1.2",
-    "cheerio": "^1.0.0-rc.12",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.18.2",
-    "moment-timezone": "^0.5.43",
-    "mongoose": "^8.6.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+  "private": true,
+  "scripts": {"start":"node index.js","dev":"node --watch index.js"},
+  "engines":{"node":">=18"},
+  "dependencies":{
+    "axios":"^1.7.9",
+    "bcryptjs":"^2.4.3",
+    "cors":"^2.8.5",
+    "dotenv":"^16.4.7",
+    "express":"^4.21.2",
+    "jsonwebtoken":"^9.0.2",
+    "mongoose":"^8.9.5"
   }
 }

@@ -1,15 +1,21 @@
+require("dotenv").config();
 
 module.exports = {
-  appName: 'RyuuXiao Portal',
-  defaultFreeApiKey: 'RyuuXiao',
-  freeDailyLimit: 25,
-  premiumDailyLimit: 500,
-  premiumWarnDays: [7, 3, 1],
-  adminEmails: (process.env.ADMIN_EMAILS || '').split(',').map(s => s.trim()).filter(Boolean),
-  mongoUri: process.env.MONGODB_URI || '',
-  telegramToken: process.env.TELEGRAM_BOT_TOKEN || '',
-  telegramOwnerId: process.env.TELEGRAM_OWNER_ID || '',
-  fonnteToken: process.env.FONNTE_TOKEN || '',
-  jwtSecret: process.env.JWT_SECRET || 'change-me-now',
-  port: Number(process.env.PORT || 3000),
+  mongodb: {
+    uri: process.env.MONGODB_URI,
+    options: {}
+  },
+  jwtSecret: process.env.JWT_SECRET,
+  fonnteToken: process.env.FONNTE_TOKEN,
+  telegram: {
+    token: process.env.TELEGRAM_BOT_TOKEN,
+    ownerId: process.env.TELEGRAM_OWNER_ID
+  },
+  cronSecret: process.env.CRON_SECRET,
+  defaults: {
+    premiumDays: Number(process.env.PREMIUM_DEFAULT_DAYS || 30),
+    premiumDailyLimit: Number(process.env.PREMIUM_DAILY_LIMIT || 1000),
+    freeDailyLimit: Number(process.env.FREE_DAILY_LIMIT || 100),
+    freeApiKey: "RyuuXiao"
+  }
 };
