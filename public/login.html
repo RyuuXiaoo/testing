@@ -18,7 +18,7 @@
   <div class="wrap">
     <nav class="nav">
       <b class="brand">Ryuu<span>Xiao</span></b>
-      <a href="/">Endpoint</a>
+      <a href="/docs">Endpoint</a>
     </nav>
 
     <div class="login-grid">
@@ -57,7 +57,7 @@ form.onsubmit = async e => {
   const d = await r.json();
   if (d.status) {
     localStorage.token = d.token;
-    location = '/index.html';
+    location = '/docs';
   } else {
     msg.innerHTML = '<p class="error">'+d.message+'</p>';
   }
