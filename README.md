@@ -28,3 +28,7 @@ Portal akun + API untuk deployment Node.js/Vercel.
 Import project ini ke Vercel dan isi Environment Variables yang sama. `vercel.json` sudah menyiapkan route Node dan cron reminder premium.
 
 Catatan: Fonnte, Telegram, dan MongoDB menggunakan secret environment. Jangan commit `.env`.
+
+
+## Docs
+Gunakan `/docs` untuk tampilan katalog endpoint seperti struktur original.
