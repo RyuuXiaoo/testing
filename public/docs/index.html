@@ -1,1 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link id="icon" rel="icon" href="" type="image/png">  
+  <title id="page">RyuuXiao API</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
 
+  @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  html { scroll-behavior: smooth; }
+
+  :root {
+    --primary: #22c55e;
+    --primary-2: #86efac;
+    --ink: #111111;
+    --paper: #fbfff8;
+    --paper-2: #ecfdf3;
+    --bg-color: #eef9f0;
+    --glass: rgba(251, 255, 248, 0.96);
+    --text-main: #171717;
+    --accent-shadow: 0 0 0 4px rgba(17, 17, 17, 0.08);
+    --res-bg: #ffffff;
+    --res-text: #171717;
+    --res-border: #111111;
+    --res-shadow: 5px 5px 0px rgba(17,17,17,0.12);
+  }
+
+  body.dark-theme {
+    --bg-color: #07130a;
+    --glass: rgba(14, 24, 16, 0.96);
+    --text-main: #f7f7f7;
+    --res-bg: #0f1a10;
+    --res-text: #f7f7f7;
+    --res-border: #86efac;
+    --res-shadow: 5px 5px 0px rgba(134, 239, 172, 0.16);
+  }
+
+  body.modal-open { overflow: hidden; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Comic Neue', 'Plus Jakarta Sans', sans-serif;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(34, 197, 94, 0.18) 0 18px, transparent 19px),
+      radial-gradient(circle at 82% 10%, rgba(134, 239, 172, 0.18) 0 14px, transparent 15px),
+      radial-gradient(circle at 70% 75%, rgba(16, 185, 129, 0.12) 0 16px, transparent 17px),
+      linear-gradient(180deg, #f7fff8 0%, #eef9f0 100%);
+    color: var(--text-main);
+    padding: 1.25rem;
+    min-height: 100vh;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  body.dark-theme {
+    background:
+      radial-gradient(circle at 18% 18%, rgba(34, 197, 94, 0.08) 0 18px, transparent 19px),
+      radial-gradient(circle at 82% 10%, rgba(134, 239, 172, 0.06) 0 14px, transparent 15px),
+      radial-gradient(circle at 70% 75%, rgba(16, 185, 129, 0.05) 0 16px, transparent 17px),
+      linear-gradient(180deg, #061007 0%, #07130a 100%);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    will-change: transform, opacity;
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* INFO GRID */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .info-box, .api-card, .history-chip, .tab-btn, .url-display, .modal-dialog, .btn-gas, #theme-toggle, #searchInput {
+    border: 3px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+
+  .info-box {
+    background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+    padding: 18px 12px;
+    border-radius: 22px;
+    text-align: center;
+  }
+  .info-box small {
+    font-weight: 800;
+    opacity: 0.72;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .info-box h2 {
+    font-size: 1.8rem;
+    color: var(--primary);
+    font-weight: 800;
+  }
+
+  .category-separator {
+    margin: 34px 0 14px 0;
+    padding: 10px 14px;
+    display: inline-block;
+    background: linear-gradient(90deg, var(--primary), var(--primary-2));
+    color: #111;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .api-card {
+    background: linear-gradient(180deg, var(--paper) 0%, #ffffff 100%);
+    border-radius: 22px;
+    padding: 1rem 1.15rem;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  .api-card:hover { transform: translateY(-2px) translateX(-1px); box-shadow: 7px 7px 0 var(--ink); }
+
+  .status-badge {
+    font-size: 0.65rem;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-left: 8px;
+    border: 2px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .status-active { background: linear-gradient(135deg, #22c55e, #86efac); color: #111; }
+  .status-error { background: linear-gradient(135deg, #ef4444, #fda4af); color: #111; }
+
+  #apiTitle {
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-family: 'Bangers', cursive;
+    letter-spacing: 2px;
+    color: #111;
+    text-align: center;
+    text-shadow: 3px 3px 0 var(--primary-2), 6px 6px 0 rgba(17,17,17,0.08);
+  }
+
+  /* SEARCH HISTORY CAPSULES */
+  .history-container {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 10px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .history-container::-webkit-scrollbar { display: none; }
+
+  .history-chip {
+    padding: 7px 14px;
+    background: linear-gradient(180deg, var(--paper) 0%, #ebfdf1 100%);
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.18s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+
+  .history-chip:hover {
+    transform: translateY(-1px);
+  }
+
+  .history-chip i { font-size: 0.72rem; opacity: 0.55; }
+
+  /* INPUT & TAB */
+  #searchInput {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: var(--glass);
+    color: inherit;
+    margin-bottom: 10px;
+    outline: none;
+    font-weight: 700;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+  }
+  #searchInput:focus { transform: translateY(-1px); }
+
+  .tab-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(180deg, var(--paper) 0%, #fff0c8 100%);
+    color: inherit;
+    font-weight: 900;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    margin-right: 10px;
+    flex: 0 0 auto;
+  }
+  .tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #111; transform: translateY(-1px); }
+
+  /* MODAL */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 16px;
+  }
+  .modal.active { display: flex; }
+  .modal-dialog {
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(180deg, var(--paper) 0%, #fffaf0 100%);
+    border-radius: 30px;
+    padding: 1.6rem;
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* URL DISPLAY */
+  .url-display {
+    background: #fff;
+    padding: 14px;
+    border-radius: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .url-text { color: var(--text-main); word-break: break-all; line-height: 1.5; font-weight: 500; }
+  .copy-btn {
+    align-self: flex-start;
+    color: #111;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 0.74rem;
+    background: linear-gradient(135deg, var(--primary-2), #d9f99d);
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+
+  /* RESPONSE BOX */
+  pre { 
+    background: var(--res-bg); 
+    color: var(--res-text); 
+    padding: 18px; 
+    border-radius: 18px; 
+    font-size: 0.85rem; 
+    white-space: pre-wrap;      
+    word-wrap: break-word;     
+    overflow-x: hidden;        
+    margin-top: 14px; 
+    border: 3px solid var(--res-border); 
+    box-shadow: var(--res-shadow);
+    font-family: 'JetBrains Mono', monospace;
+    transition: none;
+  }
+
+  .btn-gas {
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: #111;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 900;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    min-width: 88px;
+  }
+  .btn-gas:hover { transform: translateY(-1px); box-shadow: 7px 7px 0 var(--ink); }
+  #theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    color: #111;
+    cursor: pointer;
+  }
+  .media-res { width: 100%; border-radius: 14px; border: 3px solid var(--res-border); box-shadow: var(--res-shadow); margin-top: 10px; }
+
+  /* LOADING SCREEN */
+  #loading-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .loading-logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 26px;
+    margin-bottom: 22px;
+    border: 4px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    object-fit: cover;
+  }
+  .loader-bar-bg {
+    width: 240px;
+    height: 10px;
+    background: rgba(17,17,17,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .loader-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-2));
+    transition: width 0.18s linear;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .info-grid { gap: 10px; }
+    .api-card { padding: 0.95rem 0.95rem; }
+    .modal-dialog { padding: 1.25rem; border-radius: 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  </style>
+</head>
+<body class="light-theme">
+
+  <div id="loading-screen">
+    <img src="https://files.catbox.moe/jtzlkc.jpg" alt="Logo" class="loading-logo">
+    <div class="loader-container">
+        <div id="load-status" style="font-size:0.75rem; color:var(--primary); font-weight:800; text-align:center;">SYNCING SYSTEM...</div>
+        <div class="loader-bar-bg" style="margin-top:10px;"><div class="loader-bar-fill" id="load-bar"></div></div>
+    </div>
+  </div>
+
+  <button id="theme-toggle"><i class="fas fa-moon"></i></button>
+
+  <div class="container" style="max-width:900px; margin: 0 auto;">
+    <header style="margin: 3rem 0;">
+      <h1 id="apiTitle">RYUUXIAO API</h1>
+      <p style="opacity:0.6; text-align:center; font-weight:600;">Creative & Automated API Solutions</p>
+    </header>
+
+    <div class="info-grid">
+        <div class="info-box reveal active">
+          <small>Total Endpoints</small>
+          <h2 id="total-endpoint">-</h2>
+        </div>
+        <div class="info-box reveal active">
+          <small>Total Requests</small>
+          <h2 id="total-request">-</h2>
+        </div>
+        <div class="info-box reveal active">
+          <small>Active APIs</small>
+          <h2 id="active-count" style="color: #00bd68;">-</h2>
+        </div>
+        <div class="info-box reveal active">
+          <small>Error APIs</small>
+          <h2 id="error-count" style="color: #ef4444;">-</h2>
+        </div>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="Search feature name..." onkeypress="handleSearch(event)">
+    <div id="searchHistory" class="history-container"></div>
+    
+    <div id="tabs" style="display:flex; gap:5px; overflow-x:auto; padding-bottom:15px; margin-bottom:20px; scrollbar-width: none;"></div>
+    <div id="api-list"></div>
+  </div>
+
+  <div class="modal" id="apiModal">
+    <div class="modal-dialog">
+        <h3 id="modalTitle" style="margin-bottom:20px; font-weight:800;">API Tester</h3>
+        <div class="url-display">
+            <span class="url-text" id="currentUrl">Generating URL...</span>
+            <div class="copy-btn" onclick="copyUrl()"><i class="fas fa-copy"></i> COPY LINK</div>
+        </div>
+        <div id="paramForm"></div>
+        <button id="runBtn" style="width:100%; padding:16px; border-radius:15px; border:none; font-weight:900; cursor:pointer; margin-top:10px; background: var(--primary-grad); color: #00331c;">EXECUTE REQUEST</button>
+        <div id="response-container"></div>
+        <button onclick="closeModal()" style="width:100%; background:none; border:none; color:inherit; margin-top:20px; cursor:pointer; opacity:0.5; font-weight:800;">DISMISS</button>
+    </div>
+  </div>
+
+  <script>
+    let allAPIs = {};
+    let currentPath = "";
+    let observer;
+    let currentCategory = "ALL";
+
+    async function init() {
+      try {
+        const settings = await fetch("/settings.json").then(res => res.json());
+        const apis = await fetch("/api/endpoints.json").then(res => res.json());
+        
+        const keys = Object.keys(apis);
+        let activeTotal = 0;
+        let errorTotal = 0;
+        
+        const sortedApis = {};
+        keys.forEach(key => {
+          sortedApis[key] = apis[key].sort((a, b) => a.name.localeCompare(b.name));
+          apis[key].forEach(api => {
+            if(api.status === "Active") activeTotal++;
+            else if(api.status === "Error") errorTotal++;
+          });
+        });
+        allAPIs = sortedApis;
+
+        document.getElementById("active-count").textContent = activeTotal;
+        document.getElementById("error-count").textContent = errorTotal;
+        document.getElementById("apiTitle").textContent = settings.apititle;
+        document.getElementById("page").textContent = settings.apititle;
+
+        setupObserver();
+        renderHistory();
+
+        const tabs = document.getElementById("tabs");
+        const categories = ["ALL", ...keys];
+        categories.forEach((cat, i) => {
+          const btn = document.createElement("button");
+          btn.innerText = cat.toUpperCase();
+          btn.className = "tab-btn" + (i === 0 ? " active" : "");
+          btn.onclick = (e) => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentCategory = cat;
+            renderAPIs(cat);
+          };
+          tabs.appendChild(btn);
+        });
+
+        renderAPIs("ALL");
+        startLoading();
+      } catch (e) { console.error(e); }
+    }
+
+    function setupObserver() {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('active');
+        });
+      }, { threshold: 0.05 });
+    }
+
+    function renderAPIs(cat, filter = "") {
+      const list = document.getElementById("api-list");
+      list.innerHTML = "";
+
+      const fragment = document.createDocumentFragment();
+      const revealNodes = [];
+      const renderList = (categoryName, apis) => {
+          const filtered = apis.filter(api => api.name.toLowerCase().includes(filter.toLowerCase()));
+          if (filtered.length > 0) {
+              const sep = document.createElement("div");
+              sep.className = "category-separator reveal";
+              sep.innerText = categoryName;
+              fragment.appendChild(sep);
+              revealNodes.push(sep);
+              filtered.forEach(api => {
+                const card = createCard(api);
+                fragment.appendChild(card);
+                revealNodes.push(card);
+              });
+          }
+      };
+
+      if (cat === "ALL") {
+        Object.keys(allAPIs).forEach(name => renderList(name, allAPIs[name]));
+      } else {
+        renderList(cat, allAPIs[cat]);
+      }
+
+      list.appendChild(fragment);
+      requestAnimationFrame(() => {
+        revealNodes.forEach(el => el.classList.add("active"));
+      });
+    }
+
+    function createCard(api) {
+      const card = document.createElement("div");
+      card.className = "api-card reveal";
+      const isError = api.status === "Error";
+
+      card.innerHTML = `
+        <div style="min-width:0;">
+          ${api.premium ? `<div style="display:inline-block;background:linear-gradient(135deg,#22c55e,#86efac);color:#111;font-size:0.62rem;padding:3px 7px;border-radius:999px;font-weight:900;margin-bottom:6px;">PREMIUM</div>` : ""}
+          <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px 0;">
+            <h3 style="margin:0; font-size:1rem; font-weight:800; line-height:1.2;">${api.name}</h3>
+            <span class="status-badge ${isError ? 'status-error' : 'status-active'}">${api.status}</span>
+          </div>
+        </div>
+        <button ${isError ? '' : `onclick="openModal('${api.path}', '${api.name}')"`} class="btn-gas" style="${isError ? 'background:#cbd5e1; opacity:0.7; cursor:not-allowed;' : ''}">${isError ? 'OFF' : 'GAS'}</button>
+      `;
+      return card;
+    }
+
+    // SEARCH & HISTORY LOGIC
+    function handleSearch(e) {
+      if (e.key === 'Enter') {
+        const val = e.target.value.trim();
+        if (val) saveToHistory(val);
+      }
+    }
+
+    function saveToHistory(text) {
+      let history = JSON.parse(localStorage.getItem("apiHistory") || "[]");
+      history = [text, ...history.filter(item => item !== text)].slice(0, 10);
+      localStorage.setItem("apiHistory", JSON.stringify(history));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const historyBox = document.getElementById("searchHistory");
+      const history = JSON.parse(localStorage.getItem("apiHistory") || "[]");
+      historyBox.innerHTML = history.map(text => `
+        <div class="history-chip" onclick="applyHistory('${text}')">
+          ${text}
+          <i class="fas fa-times" onclick="removeHistory(event, '${text}')"></i>
+        </div>
+      `).join("");
+    }
+
+    function applyHistory(text) {
+      const input = document.getElementById("searchInput");
+      input.value = text;
+      renderAPIs(currentCategory, text);
+    }
+
+    function removeHistory(e, text) {
+      e.stopPropagation();
+      let history = JSON.parse(localStorage.getItem("apiHistory") || "[]");
+      history = history.filter(item => item !== text);
+      localStorage.setItem("apiHistory", JSON.stringify(history));
+      renderHistory();
+    }
+
+    let searchDebounce;
+    document.getElementById("searchInput").addEventListener('input', (e) => {
+      clearTimeout(searchDebounce);
+      const value = e.target.value;
+      searchDebounce = setTimeout(() => renderAPIs(currentCategory, value), 90);
+    });
+
+    // MODAL LOGIC
+    function openModal(path, name) {
+      currentPath = path;
+      document.getElementById("modalTitle").innerText = name;
+      document.getElementById("response-container").innerHTML = "";
+      const form = document.getElementById("paramForm");
+      form.innerHTML = "";
+      if (path.includes("?")) {
+        const queryPart = path.split("?")[1];
+        const params = queryPart.split("&");
+        params.forEach(p => {
+          const key = p.split("=")[0];
+          form.innerHTML += `<div style="margin-bottom:15px;">
+            <label style="font-size:0.75rem; font-weight:800; opacity:0.6; margin-bottom:6px; display:block;">${key.toUpperCase()}</label>
+            <input type="text" class="api-input" data-key="${key}" oninput="updateUrlPreview()" style="width:100%; padding:14px; border-radius:12px; border:1.5px solid rgba(0,255,136,0.1); background:var(--glass); color:inherit; outline:none;" placeholder="Enter ${key}...">
+          </div>`;
+        });
+      }
+      updateUrlPreview();
+      document.body.classList.add("modal-open");
+      document.getElementById("apiModal").classList.add("active");
+    }
+
+    function updateUrlPreview() {
+        let baseUrl = currentPath.split("?")[0];
+        let params = [];
+        document.querySelectorAll(".api-input").forEach(input => {
+            params.push(`${input.getAttribute('data-key')}=${encodeURIComponent(input.value)}`);
+        });
+        const finalUrl = window.location.origin + baseUrl + (params.length > 0 ? "?" + params.join("&") : "");
+        document.getElementById("currentUrl").innerText = finalUrl;
+    }
+
+    document.getElementById("runBtn").onclick = async () => {
+      const btn = document.getElementById("runBtn");
+      const respCont = document.getElementById("response-container");
+      const url = document.getElementById("currentUrl").innerText;
+      
+      let inputs = document.querySelectorAll(".api-input");
+      for(let input of inputs) {
+        if(!input.value.trim()) {
+            input.style.borderColor = "#ef4444";
+            alert("Harap isi semua parameter!");
+            return;
+        }
+      }
+
+      btn.innerText = "WAITING SERVER...";
+      respCont.innerHTML = "<pre>Fetching data...</pre>";
+      try {
+        const res = await fetch(url);
+        const contentType = res.headers.get("content-type") || "";
+        if (contentType.includes("image/")) {
+            respCont.innerHTML = `<img src="${url}" class="media-res">`;
+        } else if (contentType.includes("video/")) {
+            respCont.innerHTML = `<video src="${url}" controls class="media-res" autoplay></video>`;
+        } else if (contentType.includes("audio/")) {
+            respCont.innerHTML = `<audio src="${url}" controls style="width:100%; margin-top:10px;"></audio>`;
+        } else {
+            const text = await res.text();
+            try {
+                const json = JSON.parse(text);
+                respCont.innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+            } catch {
+                respCont.innerHTML = `<pre>${text}</pre>`;
+            }
+        }
+      } catch (e) {
+        respCont.innerHTML = `<pre style="color:#ef4444">Error: API tidak merespon.</pre>`;
+      } finally {
+        btn.innerText = "EXECUTE REQUEST";
+      }
+    };
+
+    function startLoading() {
+      let w = 0;
+      const bar = document.getElementById("load-bar");
+      const tick = () => {
+        w = Math.min(100, w + (w < 70 ? 8 : 3));
+        bar.style.width = w + "%";
+        if (w < 100) {
+          requestAnimationFrame(() => setTimeout(tick, 28));
+        } else {
+          setTimeout(() => {
+            const screen = document.getElementById("loading-screen");
+            screen.style.opacity = "0";
+            screen.style.transition = "opacity 0.25s ease";
+            setTimeout(() => screen.style.display = "none", 260);
+          }, 140);
+        }
+      };
+      tick();
+    }
+
+    function copyUrl() {
+        navigator.clipboard.writeText(document.getElementById("currentUrl").innerText);
+        alert("Success! Link copied.");
+    }
+
+    function closeModal() { 
+      document.body.classList.remove("modal-open");
+      document.getElementById("apiModal").classList.remove("active"); 
+    }
+
+    document.getElementById("theme-toggle").onclick = () => {
+      document.body.classList.toggle("dark-theme");
+      document.querySelector("#theme-toggle i").className = document.body.classList.contains("dark-theme") ? "fas fa-sun" : "fas fa-moon";
+    };
+fetch('/api/status').then(res => res.json()).then(data => {
+      document.getElementById('total-endpoint').textContent = data.result.totalfitur;
+      document.getElementById('total-request').textContent = data.result.totalrequest;
+    });
+
+    init();
+  </script>
+</body>
+</html>
