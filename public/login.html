@@ -1,1 +1,92 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login - RyuuXiao</title><link rel="stylesheet" href="/style.css"></head><body><div class="wrap"><nav class="nav"><b class="brand">Ryuu<span>Xiao</span></b><a href="/">Beranda</a></nav><div class="card" style="max-width:480px;margin:7vh auto"><h1>Login</h1><p class="muted">Masuk ke akun kamu.</p><form id="f"><input class="input" name="login" placeholder="Username / Email / Nomor TLP" required><input class="input" name="password" type="password" placeholder="Password" required><button class="btn">Masuk</button></form><div id="msg"></div><p><a href="/forgot.html">Lupa password?</a> · Belum punya akun? <a href="/register.html">Daftar</a></p></div></div><script>f.onsubmit=async e=>{e.preventDefault();msg.textContent='';const r=await fetch('/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(f)))}),d=await r.json();if(d.status){localStorage.token=d.token;location='/profile.html'}else msg.innerHTML='<p class="error">'+d.message+'</p>'}</script></body></html>
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login - RyuuXiao</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .login-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+    .preview-list{display:grid;gap:10px;margin-top:12px}
+    .preview-item{padding:12px;border:1px solid #1c3a29;border-radius:14px;background:#091d12}
+    .preview-item b{display:block;margin-bottom:4px}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#153a27;color:#7dffb2;font-size:11px;font-weight:800;margin-right:6px}
+    @media(max-width:860px){.login-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <b class="brand">Ryuu<span>Xiao</span></b>
+      <a href="/">Endpoint</a>
+    </nav>
+
+    <div class="login-grid">
+      <div class="card" style="max-width:520px">
+        <h1>Login</h1>
+        <p class="muted">Masuk untuk melihat halaman endpoint, kategori, dan akses API.</p>
+        <form id="f">
+          <input class="input" name="login" placeholder="Username / Email / Nomor TLP" required>
+          <input class="input" name="password" type="password" placeholder="Password" required>
+          <button class="btn" type="submit">Masuk</button>
+        </form>
+        <div id="msg"></div>
+        <p style="margin-top:12px"><a href="/forgot.html">Lupa password?</a> · Belum punya akun? <a href="/register.html">Daftar</a></p>
+      </div>
+
+      <div class="card">
+        <h2>Endpoint yang tersedia</h2>
+        <p class="muted">Free key default: <b>RyuuXiao</b></p>
+        <div class="preview-list" id="preview">
+          <div class="preview-item">Memuat endpoint...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const form = document.getElementById('f'); const msg = document.getElementById('msg'); const previewEl = document.getElementById('preview');
+form.onsubmit = async e => {
+  e.preventDefault();
+  msg.textContent = '';
+  const r = await fetch('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.fromEntries(new FormData(form)))
+  });
+  const d = await r.json();
+  if (d.status) {
+    localStorage.token = d.token;
+    location = '/index.html';
+  } else {
+    msg.innerHTML = '<p class="error">'+d.message+'</p>';
+  }
+};
+
+async function loadPreview() {
+  try {
+    const r = await fetch('/api/endpoints');
+    const d = await r.json();
+    if (!d.status) throw new Error(d.message || 'Gagal memuat');
+    const cats = ['AI','AM','STALK','AUTH'];
+    const countByCat = Object.fromEntries(cats.map(c => [c, d.endpoints.filter(x => x.category === c).length]));
+    previewEl.innerHTML = cats.map(c => `
+      <div class="preview-item">
+        <b>${c}</b>
+        <span class="pill">${countByCat[c]} endpoint</span>
+        <span class="pill">FREE / PREMIUM</span>
+      </div>
+    `).join('') + `
+      <div class="preview-item">
+        <b>Contoh akses</b>
+        <div class="muted">/ai/gemini?text=halo&apikey=RyuuXiao</div>
+      </div>
+    `;
+  } catch (e) {
+    previewEl.innerHTML = '<div class="preview-item">Gagal memuat endpoint.</div>';
+  }
+}
+loadPreview();
+</script>
+</body>
+</html>
