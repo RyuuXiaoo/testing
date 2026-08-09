@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile · RyuuXiao Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="profile">
+  <div class="container">
+    <div class="topbar">
+      <div class="brand" style="margin:0">
+        <div class="brand-badge">RX</div>
+        <div>
+          <div class="small muted">Profile pengguna</div>
+          <div style="font-size:18px;font-weight:900" id="displayName">Memuat...</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a class="btn btn-ghost" href="/profile">Profile</a>
+        <a class="btn btn-ghost" href="/admin">Admin</a>
+        <button class="btn btn-danger" id="logoutBtn" type="button">Keluar</button>
+      </div>
+    </div>
+    <div id="toast" hidden></div>
+
+    <div class="hero">
+      <section class="card panel">
+        <div class="row" style="align-items:flex-start">
+          <img id="avatar" src="https://ui-avatars.com/api/?name=User" alt="avatar" style="width:92px;height:92px;border-radius:24px;object-fit:cover;border:1px solid rgba(255,255,255,.1)">
+          <div style="flex:1">
+            <div class="row" style="justify-content:space-between;align-items:center">
+              <div>
+                <div class="small muted">Role</div>
+                <span id="displayRole" class="pill free">free</span>
+              </div>
+              <div class="small muted">Blacklisted: <strong id="blacklisted">Tidak</strong></div>
+            </div>
+            <div class="hr"></div>
+            <div class="grid-2">
+              <div class="stat"><div class="k">Username</div><div class="v" id="usernameField">-</div></div>
+              <div class="stat"><div class="k">Email</div><div class="v" id="email">-</div></div>
+              <div class="stat"><div class="k">Nomor TLP</div><div class="v" id="phone">-</div></div>
+              <div class="stat"><div class="k">Limit harian premium</div><div class="v" id="dailyLimit">-</div></div>
+              <div class="stat"><div class="k">Premium berakhir</div><div class="v" id="premiumUntil">-</div></div>
+              <div class="stat"><div class="k">API Key</div><div class="v kbd" id="apiKey">-</div></div>
+            </div>
+            <div class="hr"></div>
+            <div class="small muted">Dibuat: <span id="createdAt">-</span></div>
+            <div class="small muted">Custom API key hanya dipakai untuk user premium. Free hanya memakai <span class="kbd">RyuuXiao</span>.</div>
+            <div class="row" style="margin-top:14px">
+              <button class="btn btn-primary" id="requestNewKey" type="button">Buat / Refresh API Key</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <h2 style="margin:0 0 12px">Ubah Username</h2>
+        <form id="changeUsernameForm" class="stack">
+          <input id="newUsername" class="input" placeholder="username baru" required>
+          <button class="btn btn-primary" type="submit">Simpan Username</button>
+        </form>
+        <div class="hr"></div>
+        <h2 style="margin:0 0 12px">Ubah Password</h2>
+        <form id="changePasswordForm" class="stack">
+          <input id="currentPassword" type="password" class="input" placeholder="password lama" required>
+          <input id="newPassword" type="password" class="input" placeholder="password baru" required>
+          <button class="btn btn-gold" type="submit">Simpan Password</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

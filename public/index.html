@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login · RyuuXiao Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="login">
+  <div class="container">
+    <div class="hero">
+      <section class="card panel">
+        <div class="brand">
+          <div class="brand-badge">RX</div>
+          <div>
+            <div class="small muted">Sistem login · premium · admin</div>
+            <div style="font-size:18px;font-weight:900">RyuuXiao Portal</div>
+          </div>
+        </div>
+        <h1 class="h1">Masuk ke panel akun dan API.</h1>
+        <p class="sub">Login, pendaftaran, profil, reset password via WhatsApp, dan panel admin untuk premium, key, serta blacklist IP.</p>
+        <div class="badges">
+          <span class="badge">MongoDB</span>
+          <span class="badge">Fonnte WhatsApp</span>
+          <span class="badge">Telegram Alert</span>
+          <span class="badge">AI · AM · Stalk</span>
+        </div>
+        <div class="hr"></div>
+        <div class="stack">
+          <div class="stat">
+            <div class="k">Akses API Free</div>
+            <div class="v">RyuuXiao</div>
+          </div>
+          <div class="stat">
+            <div class="k">Premium</div>
+            <div class="v">Custom apikey</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <div id="toast" hidden></div>
+        <h2 style="margin:0 0 6px;font-size:28px">Login</h2>
+        <p class="muted" style="margin:0 0 18px">Masukkan username/email dan password.</p>
+        <form id="loginForm" class="stack">
+          <div>
+            <label class="label">Username atau Email</label>
+            <input id="identifier" class="input" placeholder="username / email" required>
+          </div>
+          <div>
+            <label class="label">Password</label>
+            <input id="password" type="password" class="input" placeholder="password" required>
+          </div>
+          <div class="row">
+            <button class="btn btn-primary" type="submit">Masuk</button>
+            <a class="btn btn-ghost" id="goRegister" href="/register">Daftar</a>
+            <button class="btn btn-ghost" type="button" id="openForgot">Lupa password</button>
+          </div>
+        </form>
+        <div class="hr"></div>
+        <div class="small muted">Setelah login, kamu bisa lihat role, email, limit harian premium, dan masa premium di halaman profile.</div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal" id="forgotModal">
+    <div class="modal-box">
+      <div class="topbar">
+        <div>
+          <div style="font-size:22px;font-weight:900">Reset Password</div>
+          <div class="muted small">Kode dikirim ke WhatsApp lewat Fonnte.</div>
+        </div>
+        <button class="btn btn-ghost" id="closeForgot">Tutup</button>
+      </div>
+      <div id="forgotStep1">
+        <form id="forgotRequestForm" class="stack">
+          <div>
+            <label class="label">Username / Email / Nomor HP</label>
+            <input id="forgotIdentifier" class="input" placeholder="contoh: andi / andi@mail.com / 62812..." required>
+          </div>
+          <button class="btn btn-primary" type="submit">Kirim Kode</button>
+        </form>
+      </div>
+      <div id="forgotStep2" hidden>
+        <div class="hr"></div>
+        <form id="forgotVerifyForm" class="stack">
+          <input id="forgotIdentifier2" type="hidden">
+          <div>
+            <label class="label">Kode OTP</label>
+            <input id="forgotCode" class="input" placeholder="6 digit kode" required>
+          </div>
+          <div>
+            <label class="label">Password Baru</label>
+            <input id="forgotNewPassword" type="password" class="input" placeholder="password baru" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Ubah Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
